@@ -1,0 +1,17 @@
+--- /opt/petasan/scripts/admin/node_manage_disks.py	2019-08-03 20:36:01.000000000 +0800
++++ node_manage_disks.py	2019-12-12 09:20:31.389044956 +0800
+@@ -269,8 +269,12 @@
+                 cmd = "python {}{} >/dev/null 2>&1 &".format(path, config_api.get_petasan_service())
+                 exec_command(cmd)
+         else:
+-            # ToDO
+-            pass
++            # Added by anton85bk: disabling iscsi role on node
++            logger.info("Disable iscsi role on this node")
++            node_info.is_iscsi = False
++            cluster_config.update_node_info(node_info)
++            is_dirty = True
++            ##
+ 
+         if is_dirty:
+ 

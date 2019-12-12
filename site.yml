@@ -1,0 +1,21 @@
+---
+- hosts: petasan
+  tasks:
+
+    - name: Apply patch to disable iscsi role to script
+      patch:
+         src: node_manage_disks.patch
+         dest: /opt/petasan/scripts/admin/node_manage_disks.py
+
+#      template:
+#         src: node_manage_disks.py
+#         dest: /opt/petasan/scripts/admin/node_manage_disks.py
+#         mode: 0755
+
+    - name: Fix node_info.json
+      lineinfile:
+        path: /opt/petasan/config/node_info.json
+        regexp: '"is_iscsi": '
+        line: '    "is_iscsi": false,'
+    - name: Run command to disable iscsi
+      command: /opt/petasan/scripts/admin/node_manage_disks.py update-role -is_iscsi 0 -is_storage -1 -is_backup -1
